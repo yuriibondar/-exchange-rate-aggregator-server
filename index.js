@@ -5,7 +5,10 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const PORT = 5500;
+import dotenv from 'dotenv';
+dotenv.config();
+
+const PORT = process.env.PORT || 5500;
 
 const app = express();
 // app.use(express.static(path.join(__dirname, './build')))
@@ -22,7 +25,7 @@ app.get(/^(?!\/api).+/, (req, res) => {
 
 app.get("/api/kit", (req, res) => {
     getKitRates()
-    .then(response => res.send(response.data))
+    .then(response => res.send(response))
     .catch(error => {
         res.status(500).send(error.message);
     });
