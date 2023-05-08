@@ -1,28 +1,15 @@
-import axios from "axios";
+import puppeteer from 'puppeteer';
 
-const api = axios.create({
-  baseURL: "https://obmennovosti.info/city.php",
-  params: {
-    city: 39, // Vinnytsia
-  },
-//   headers: {
-//     'Access-Control-Allow-Origin': '*'
-//   }
-});
+export  const getRates = async () => {
+  const browser = await puppeteer.launch();
+  const page = await browser.newPage();
 
-export const getRates = () => {
-  return new Promise((resolve, reject) => {
-    api
-      .get("/")
-      .then((response) => {
-        resolve(response);
-      })
-      .catch((error) => {
-        console.log(
-          `Failed to get Kit rates: `,
-          error
-        );
-        reject(error);
-      });
+  await page.goto('https://obmennovosti.info/city.php?city=39');
+  const content = await page.evaluate(() => {
+    return document.querySelector('body>script:last-child').textContent;
   });
+
+  await browser.close();
+
+  return content;
 };
